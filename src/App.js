@@ -1,4 +1,3 @@
-import { Container } from "@material-ui/core";
 import Contact from "./Contact";
 
 const App = () => {

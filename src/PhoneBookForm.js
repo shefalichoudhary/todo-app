@@ -1,5 +1,6 @@
 import { Button, Grid, TextField } from "@material-ui/core";
 import { useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 
 const PhoneBookForm = ({ addNewPhoneBookEntry }) => {
   const [user, setUser] = useState({ name: "", phoneNumber: "" });
@@ -7,7 +8,6 @@ const PhoneBookForm = ({ addNewPhoneBookEntry }) => {
   const OnPhoneNumberChange = (e) => {
     const newUser = Object.assign({}, user);
     newUser.phoneNumber = e.target.value;
-
     setUser(newUser);
   };
 
@@ -19,6 +19,7 @@ const PhoneBookForm = ({ addNewPhoneBookEntry }) => {
 
   const onPhoneBookSubmit = (e) => {
     e.preventDefault();
+    user.id = uuidv4();
     addNewPhoneBookEntry(user);
     setUser({
       name: "",
