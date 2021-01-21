@@ -1,11 +1,29 @@
-import { Button, Grid, TextField, IconButton } from "@material-ui/core";
+import {
+  Button,
+  Grid,
+  TextField,
+  IconButton,
+  MenuItem,
+  Select,
+  InputLabel,
+} from "@material-ui/core";
 import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import CancelIcon from "@material-ui/icons/Cancel";
 import UpdateIcon from "@material-ui/icons/Update";
 
-const PhoneBookForm = ({ addNewPhoneBookEntry, name, phoneNumber, isEdit }) => {
-  const [user, setUser] = useState({ name: name, phoneNumber: phoneNumber });
+const PhoneBookForm = ({
+  addNewPhoneBookEntry,
+  OnHandleCancelItem,
+  isEdit,
+  item,
+}) => {
+  const [user, setUser] = useState({
+    name: item.name,
+    phoneNumber: item.phoneNumber,
+    id: item.id,
+    speedDial: item.speedDial,
+  });
 
   const OnNameChange = (e) => {
     const newUser = Object.assign({}, user);
@@ -18,62 +36,77 @@ const PhoneBookForm = ({ addNewPhoneBookEntry, name, phoneNumber, isEdit }) => {
     newUser.phoneNumber = e.target.value;
     setUser(newUser);
   };
+  const OnHandleUpdateItem = () => {
+    addNewPhoneBookEntry(user, isEdit);
+    OnHandleCancelItem();
+  };
+  const OnSelectHandler = (e) => {
+    const newUser = Object.assign({}, user);
+    newUser.speedDial = e.target.value;
+    setUser(newUser);
+  };
 
   const OnPhoneBookSubmit = (e) => {
     e.preventDefault();
     user.id = uuidv4();
-    addNewPhoneBookEntry(user);
+    addNewPhoneBookEntry(user, isEdit);
     setUser({
       name: "",
       phoneNumber: "",
+      speedDial: undefined,
     });
   };
-
-  if (isEdit) {
-    return (
-      <Grid spacing={3} container alignItems="center">
-        <Grid item>
-          <TextField
-            type="text"
-            onChange={OnNameChange}
-            value={name}
-            label="Name"
-          />
-        </Grid>
-        <Grid item>
-          <TextField
-            type="number"
-            value={phoneNumber}
-            label="Number"
-            onChange={OnPhoneNumberChange}
-          />
-        </Grid>
-      </Grid>
-    );
-  }
 
   let actionButtons;
 
   if (isEdit) {
     actionButtons = (
-      <Grid item>
-        <Button type="submit" variant="contained" color="primary">
-          Add
-        </Button>
-      </Grid>
+      <>
+        <Grid item>
+          <InputLabel id="demo-simple-select-label">Speed Dial</InputLabel>
+          <Select
+            style={{ marginLeft: "20px" }}
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value={user.speedDial}
+            onChange={OnSelectHandler}
+          >
+            <MenuItem value={10}>1</MenuItem>
+            <MenuItem value={20}>2</MenuItem>
+            <MenuItem value={30}>3</MenuItem>
+            <MenuItem value={40}>4</MenuItem>
+            <MenuItem value={50}>5</MenuItem>
+            <MenuItem value={60}>6</MenuItem>
+            <MenuItem value={70}>7</MenuItem>
+            <MenuItem value={80}>8</MenuItem>
+            <MenuItem value={90}>9</MenuItem>
+          </Select>
+        </Grid>
+
+        <Grid item>
+          <IconButton onClick={OnHandleUpdateItem} color="primary">
+            <UpdateIcon />
+          </IconButton>
+        </Grid>
+        <Grid item>
+          <IconButton onClick={() => OnHandleCancelItem()} color="secondary">
+            <CancelIcon />
+          </IconButton>
+        </Grid>
+      </>
     );
   } else {
     actionButtons = (
       <>
         <Grid item>
-          <IconButton color="primary">
-            <UpdateIcon />
-          </IconButton>
-        </Grid>
-        <Grid item>
-          <IconButton color="secondary">
-            <CancelIcon />
-          </IconButton>
+          <Button
+            style={{ marginLeft: "20px" }}
+            type="submit"
+            variant="contained"
+            color="primary"
+          >
+            Add
+          </Button>
         </Grid>
       </>
     );
@@ -84,6 +117,8 @@ const PhoneBookForm = ({ addNewPhoneBookEntry, name, phoneNumber, isEdit }) => {
       <Grid spacing={3} container alignItems="center">
         <Grid item>
           <TextField
+            required
+            style={{ marginLeft: "20px" }}
             type="text"
             onChange={OnNameChange}
             value={user.name}
@@ -92,10 +127,11 @@ const PhoneBookForm = ({ addNewPhoneBookEntry, name, phoneNumber, isEdit }) => {
         </Grid>
         <Grid item>
           <TextField
+            required
             type="number"
             value={user.phoneNumber}
-            label="Number"
             onChange={OnPhoneNumberChange}
+            label="Number"
           />
         </Grid>
         {actionButtons}

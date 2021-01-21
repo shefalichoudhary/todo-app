@@ -2,13 +2,16 @@ import { List } from "@material-ui/core";
 import React, { useState } from "react";
 import PhoneBookEntry from "./PhoneBookEntry";
 import PhoneBookForm from "./PhoneBookForm";
-import { v4 as uuidv4 } from "uuid";
 
 const PhoneBook = () => {
   const [phoneBookList, setPhoneBookList] = useState([]);
 
-  const addNewPhoneBookEntry = (phoneBookItem) => {
-    setPhoneBookList([phoneBookItem, ...phoneBookList]);
+  const addNewPhoneBookEntry = (phoneBookItem, isEdit) => {
+    if (isEdit) {
+      OnUpdateItem(phoneBookItem);
+    } else {
+      setPhoneBookList([phoneBookItem, ...phoneBookList]);
+    }
   };
 
   const OnDeleteItem = (selectedItem) => {
@@ -31,16 +34,10 @@ const PhoneBook = () => {
       }
     });
 
-    console.log("Old values", updateItem);
-    console.log("Index", index);
-    console.log("Old array", phoneBookList);
-
     const newArr = [...phoneBookList];
-    console.log("New array", newArr);
-    const newItem = Object.assign({}, updateItem);
-    console.log("objec assign");
-    newArr[index] = newItem;
-    console.log("Updated array", newArr);
+
+    newArr[index] = updateItem;
+
     setPhoneBookList(newArr);
   };
 
@@ -48,8 +45,7 @@ const PhoneBook = () => {
     <>
       <PhoneBookForm
         addNewPhoneBookEntry={addNewPhoneBookEntry}
-        name=""
-        phoneNumber=""
+        item={{ name: "", phoneNumber: "" }}
         isEdit={false}
       />
       <List>
@@ -57,7 +53,7 @@ const PhoneBook = () => {
           return (
             <PhoneBookEntry
               OnDeleteItem={OnDeleteItem}
-              OnUpdateItem={OnUpdateItem}
+              addNewPhoneBookEntry={addNewPhoneBookEntry}
               item={item}
               key={item.id}
             />
