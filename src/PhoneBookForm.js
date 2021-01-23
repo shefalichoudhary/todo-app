@@ -62,9 +62,10 @@ const PhoneBookForm = ({
   if (isEdit) {
     actionButtons = (
       <>
-        <div>Speed Dial</div>
         <Grid item>
-          <InputLabel id="demo-simple-select-label"></InputLabel>
+          <InputLabel id="demo-simple-select-label">Speed Dial</InputLabel>
+        </Grid>
+        <Grid item>
           <Select
             style={{ marginLeft: "20px" }}
             labelId="demo-simple-select-label"
