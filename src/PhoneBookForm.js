@@ -63,7 +63,7 @@ const PhoneBookForm = ({
     actionButtons = (
       <>
         <Grid item>
-          <InputLabel id="demo-simple-select-label">Speed Dial</InputLabel>
+          <InputLabel id="demo-simple-select-label"></InputLabel>
           <Select
             style={{ marginLeft: "20px" }}
             labelId="demo-simple-select-label"
